@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  rsmonitor:
+    build: .
+    container_name: rsmonitor
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://200.69.250.98:12201"
+        tag: "rsmonitor"
+        
