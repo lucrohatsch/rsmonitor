@@ -1,6 +1,8 @@
 use std::time::{Duration, SystemTime};
 use std::process::{Command, Stdio};
 use std::thread::sleep;
+use std::fs::File;
+use std::io::Error;
 
 fn main() {
     println!("This is RSMONITOR");
@@ -13,6 +15,7 @@ fn main() {
 
 fn get_status() {
     loop {
+        let out_pipe = aux();
         // let mut send_cmd = Command::new("echo");
         // send_cmd.arg("docker stats --no-stream");
         // send_cmd.arg("|");
@@ -40,4 +43,19 @@ fn get_status() {
         sleep(Duration::new(5, 0));
 
     }
+}
+
+
+fn aux() -> Result<(), Error> {
+    let outputs = File::create("pipenames/statuspipe")?;
+    let errors = outputs.try_clone()?;
+
+    Command::new("echo")
+        .arg("docker stats --no-stream")
+        .stdout(Stdio::from(outputs))
+        .stderr(Stdio::from(errors))
+        .spawn()?
+        .wait_with_output()?;
+
+    Ok(())
 }

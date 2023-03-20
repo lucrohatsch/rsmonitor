@@ -4,9 +4,14 @@ services:
   rsmonitor:
     build: .
     container_name: rsmonitor
+    volumes:
+      - pipenames:/usr/src/rsmonitor/pipenames
     logging:
       driver: gelf
       options:
         gelf-address: "udp://200.69.250.98:12201"
         tag: "rsmonitor"
-        
+volumes:
+  pipenames:
+
+
